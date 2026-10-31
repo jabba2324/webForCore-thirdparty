@@ -1,0 +1,50 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <ProjectGuid>{820694DF-C225-46B6-BA38-C5FEFBD79AEB}</ProjectGuid>
+        <TargetFrameworks>net11.0</TargetFrameworks>
+        <WebGreaseLibPath>..\packages\WebGrease.1.5.2\lib</WebGreaseLibPath>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <OutputPath>bin\$(Configuration)\</OutputPath>
+        <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
+        <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>..\AjaxKey.snk</AssemblyOriginatorKeyFile>
+
+        <PackageId>webForCore.AjaxControlToolkit.StaticResources</PackageId>
+        <Title>AjaxControlToolkit.StaticResources</Title>
+        <Product>AjaxControlToolkit.StaticResources</Product>
+        <Description>AjaxControlToolkit for WebFormsForCore</Description>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageTags>webforms;aspnet;system.web;porting;net11</PackageTags>
+        <IncludeSymbols>true</IncludeSymbols>
+        <EmbedUntrackedSources>false</EmbedUntrackedSources>
+        <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+    </PropertyGroup>
+    <ItemGroup Condition="$(TargetFramework) != 'net48'">
+        <PackageReference Include="webForCore.Web" Version="$(WebForCoreVersion)" />
+        <PackageReference Include="webForCore.Web.Optimization" Version="$(WebForCoreVersion)" />
+        <PackageReference Include="webForCore.Web.Infrastructure" Version="$(WebForCoreVersion)" />
+        <PackageReference Include="webForCore.WebGrease" Version="$(WebForCoreVersion)" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Antlr3.Runtime" Version="3.5.1" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Include="..\SharedAssemblyInfo.cs" Link="Properties\SharedAssemblyInfo.cs" />
+    </ItemGroup>
+    <ItemGroup>
+        <Reference Include="System.Web" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\AjaxControlToolkit\AjaxControlToolkit.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\..\..\README.md">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
+    </ItemGroup>
+
+</Project>

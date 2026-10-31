@@ -1,0 +1,10 @@
+<Project>
+    <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
+    <!-- AjaxControlToolkit 20.1.0 (DevExpress/AjaxControlToolkit, through WebFormsForCore.AjaxControlToolkit), for .NET 11 on
+         webForCore. The assemblies keep the toolkit's own name, version (SharedAssemblyInfo.cs) and key (AjaxKey.snk). -->
+    <PropertyGroup>
+        <Authors>CodePlex Foundation; Simon Egli; webForCore contributors</Authors>
+        <Copyright>Copyright (c) 2012-2020, CodePlex Foundation; webForCore contributors</Copyright>
+        <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
+    </PropertyGroup>
+</Project>

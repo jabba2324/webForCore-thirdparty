@@ -1,0 +1,9 @@
+<Project>
+  <!-- A package that brings the original AjaxControlToolkit (a .NET Framework build of the same assembly) loses the SDK's
+       conflict resolution to this one at any version. -->
+  <Target Name="WebForCoreOverrideAjaxControlToolkit" BeforeTargets="_HandlePackageFileConflicts;_HandlePackageFileConflictsForPublish">
+    <ItemGroup>
+      <PackageConflictOverrides Include="webForCore.AjaxControlToolkit" OverriddenPackages="AjaxControlToolkit|99.0.0" />
+    </ItemGroup>
+  </Target>
+</Project>

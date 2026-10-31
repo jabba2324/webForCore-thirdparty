@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <!-- An MVC 5 and Web Forms application on webForCore's packages and this repository's (tools/smoke.sh): Unity.Mvc
+       with the original WebActivatorEx package, as applications have them, which webForCore.WebActivatorEx replaces
+       (its start methods must run), and a page with an AjaxControlToolkit extender. -->
+  <PropertyGroup>
+    <TargetFramework>net11.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <OutputPath>bin_dotnet</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    <GenerateDependencyFile>true</GenerateDependencyFile>
+    <NoWarn>$(NoWarn);NU1701</NoWarn>
+    <PredefinedCulturesOnly>true</PredefinedCulturesOnly>
+    <EnableDefaultRazorGenerateItems>false</EnableDefaultRazorGenerateItems>
+    <RazorCompileOnBuild>false</RazorCompileOnBuild>
+    <RazorCompileOnPublish>false</RazorCompileOnPublish>
+    <ImportDirectoryBuildProps>false</ImportDirectoryBuildProps>
+    <ImportDirectoryBuildTargets>false</ImportDirectoryBuildTargets>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="bin_dotnet\**;obj\**" />
+    <Content Remove="bin_dotnet\**" />
+    <None Remove="bin_dotnet\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="webForCore" Version="$(WebForCoreVersion)" />
+    <PackageReference Include="webForCore.Web.Mvc" Version="$(WebForCoreVersion)" />
+    <PackageReference Include="webForCore.WebActivatorEx" Version="$(ThirdPartyVersion)" />
+    <PackageReference Include="webForCore.AjaxControlToolkit" Version="$(ThirdPartyVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- As the applications have them, with no ExcludeAssets. -->
+    <PackageReference Include="Unity.Mvc" Version="5.11.1" />
+    <PackageReference Include="WebActivatorEx" Version="2.2.0" />
+  </ItemGroup>
+</Project>

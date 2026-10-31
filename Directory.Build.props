@@ -1,0 +1,15 @@
+<Project>
+  <!-- webForCore-thirdparty: libraries that aren't Microsoft's, for applications on webForCore. They are built against
+       webForCore's released packages (WebForCoreVersion), which tools/fetch-webforcore.sh downloads into
+       packages/webforcore; nuget.config maps webForCore.* to that folder and everything else to nuget.org. -->
+  <PropertyGroup>
+    <Version>0.4.0</Version>
+    <WebForCoreVersion Condition="'$(WebForCoreVersion)' == ''">0.3.0</WebForCoreVersion>
+    <LangVersion>latest</LangVersion>
+    <PackageProjectUrl>https://github.com/jabba2324/webForCore-thirdparty</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/jabba2324/webForCore-thirdparty</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PackageOutputPath>$(MSBuildThisFileDirectory)artifacts/packages</PackageOutputPath>
+  </PropertyGroup>
+</Project>

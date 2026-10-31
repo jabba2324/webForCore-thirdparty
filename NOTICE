@@ -1,0 +1,27 @@
+webForCore-thirdparty
+https://github.com/jabba2324/webForCore-thirdparty
+
+Components
+----------
+
+WebActivatorEx (src/WebActivatorEx)
+  webForCore's own implementation of WebActivatorEx 2.x's public API (PreApplicationStartMethodAttribute,
+  PostApplicationStartMethodAttribute, ApplicationShutdownMethodAttribute, ActivationManager), written from its
+  documentation and behaviour. MIT License, Copyright (c) webForCore contributors. Moved from
+  jabba2324/webForCore (src/WebFormsForCore.WebActivatorEx, PR #24).
+  It is not WebActivatorEx's code. It uses WebActivatorEx's assembly name, version (2.0.0.0) and public key (token
+  7b26dc2a43f6a0d4, in WebActivatorEx.public.snk) so that assemblies built against WebActivatorEx bind to it; it is
+  delay signed with that public key and is not signed by WebActivatorEx's author. WebActivatorEx is David Ebbo's
+  project (https://github.com/davidebbo/WebActivator, Apache License 2.0).
+
+AjaxControlToolkit (src/AjaxControlToolkit: AjaxControlToolkit, AjaxControlToolkit.StaticResources,
+AjaxControlToolkit.HtmlEditor.Sanitizer)
+  The AJAX Control Toolkit 20.1 (https://github.com/DevExpress/AjaxControlToolkit, through
+  https://github.com/simonegli8/WebFormsForCore.AjaxControlToolkit commit 0c5b111, with WebFormsForCore's and
+  webForCore's changes for .NET). Moved from jabba2324/webForCore (src/WebFormsForCore.AjaxControlToolkit); only the
+  three shipped projects were moved. BSD 3-Clause License, Copyright (c) 2012-2020, CodePlex Foundation (see
+  LICENSE-BSD-3-CLAUSE.txt and src/AjaxControlToolkit/LICENSE.txt). Signed with the toolkit's published key
+  (AjaxKey.snk). The packages depend on HtmlAgilityPack (MIT), Antlr3.Runtime (BSD) and Newtonsoft.Json (MIT) from
+  nuget.org.
+
+webForCore's packages, which these are built against, are under their own licences; see webForCore's NOTICE.

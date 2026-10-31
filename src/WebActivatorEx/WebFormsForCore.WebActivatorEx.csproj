@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <!-- WebActivatorEx 2.x for webForCore, written from its documented API, which finds the activation attributes in the
+         application's load context (webForCore issue #21: the original's Assembly.LoadFrom loads second copies into .NET's
+         default context, and no start method ran). It keeps the original's name, version and public key, so applications
+         and packages built against WebActivatorEx (Unity.Mvc, Ninject.MVC, StructureMap.MVC) bind to it. It is delay
+         signed with that public key only (WebActivatorEx.public.snk): .NET doesn't verify strong-name signatures. -->
+    <PropertyGroup>
+        <TargetFramework>net11.0</TargetFramework>
+        <ImplicitUsings>disable</ImplicitUsings>
+        <Nullable>disable</Nullable>
+        <AssemblyName>WebActivatorEx</AssemblyName>
+        <RootNamespace>WebActivatorEx</RootNamespace>
+        <SignAssembly>true</SignAssembly>
+        <DelaySign>true</DelaySign>
+        <AssemblyOriginatorKeyFile>WebActivatorEx.public.snk</AssemblyOriginatorKeyFile>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+
+        <PackageId>webForCore.WebActivatorEx</PackageId>
+        <Title>WebActivatorEx for webForCore</Title>
+        <Authors>webForCore contributors</Authors>
+        <Description>WebActivatorEx for webForCore: pre-start, post-start and shutdown methods for ASP.NET applications, written from WebActivatorEx's documented API, finding them in the application's load context. Replaces the original WebActivatorEx package in builds that reference it.</Description>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageTags>webforms;aspnet;system.web;webactivator;porting;net11</PackageTags>
+        <IncludeSymbols>true</IncludeSymbols>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="webForCore.Configuration" Version="$(WebForCoreVersion)" />
+        <PackageReference Include="webForCore.Web" Version="$(WebForCoreVersion)" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+        <None Include="buildTransitive\webForCore.WebActivatorEx.targets" Pack="true" PackagePath="buildTransitive\" />
+    </ItemGroup>
+
+</Project>

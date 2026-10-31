@@ -1,0 +1,113 @@
+# Builds the libraries against webForCore's released packages, packs them, and runs tools/smoke (an application on
+# both repositories' packages). A version tag (v0.4.0, matching <Version> in Directory.Build.props) also publishes the
+# packages as a GitHub release.
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  DOTNET_NOLOGO: "1"
+  DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+  OPENSSL_ENABLE_SHA1_SIGNATURES: "1"
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      webforcore: ${{ steps.version.outputs.webforcore }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # The release version from Directory.Build.props; any other run builds a prerelease of it (0.4.0-ci.12).
+      - name: Version
+        id: version
+        run: |
+          base=$(grep -oP '(?<=<Version>)[^<]+' Directory.Build.props)
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            if [[ "${GITHUB_REF#refs/tags/v}" != "$base" ]]; then
+              echo "::error::Tag ${GITHUB_REF#refs/tags/} doesn't match <Version>$base</Version> in Directory.Build.props"; exit 1
+            fi
+            version=$base
+          else
+            version=$base-ci.$GITHUB_RUN_NUMBER
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "webforcore=$(sed -n 's#.*<WebForCoreVersion[^>]*>\(.*\)</WebForCoreVersion>.*#\1#p' Directory.Build.props)" >> "$GITHUB_OUTPUT"
+          echo "Version: $version"
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 11.0.100-rc.3.26522.148
+
+      - name: System packages
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends fontconfig fonts-dejavu-core libfontconfig1
+
+      - name: webForCore's packages
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: tools/fetch-webforcore.sh ${{ steps.version.outputs.webforcore }}
+
+      - name: Build
+        run: dotnet build webForCore-thirdparty.slnx -c Release -nodeReuse:false -p:Version=${{ steps.version.outputs.version }}
+
+      - name: Pack
+        run: tools/pack.sh ${{ steps.version.outputs.version }}
+
+      - name: Smoke test
+        run: tools/smoke.sh ${{ steps.version.outputs.version }} ${{ steps.version.outputs.webforcore }}
+
+      - name: Upload packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: packages
+          path: |
+            artifacts/packages/*.nupkg
+            artifacts/packages/*.snupkg
+          if-no-files-found: error
+
+  release:
+    needs: build-and-test
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: docs/release-notes
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: packages
+          path: packages
+
+      - name: Create the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ needs.build-and-test.outputs.version }}
+          WEBFORCORE: ${{ needs.build-and-test.outputs.webforcore }}
+        run: |
+          cat > notes.md <<NOTES
+          webForCore-thirdparty $VERSION as NuGet packages, built against webForCore $WEBFORCORE. They aren't on nuget.org:
+          download the ones you need into the same folder as webForCore's packages (a package source in your nuget.config)
+          and reference them next to \`webForCore\`. See the README.
+          NOTES
+          if [ -f "docs/release-notes/$VERSION.md" ]; then printf '\n' >> notes.md; cat "docs/release-notes/$VERSION.md" >> notes.md; fi
+          gh release create "$GITHUB_REF_NAME" packages/*.nupkg packages/*.snupkg \
+            --repo "$GITHUB_REPOSITORY" --title "webForCore-thirdparty $VERSION" --notes-file notes.md --verify-tag

@@ -1,0 +1,10 @@
+<Project>
+  <!-- Packages such as Unity.Mvc and Ninject.MVC bring the original WebActivatorEx package, whose assembly has the same
+       name and version as this one. Make this package win the SDK's conflict resolution over it at any version, as
+       webForCore's packages do over the Microsoft packages they replace. -->
+  <Target Name="WebForCoreOverrideWebActivatorEx" BeforeTargets="_HandlePackageFileConflicts;_HandlePackageFileConflictsForPublish">
+    <ItemGroup>
+      <PackageConflictOverrides Include="webForCore.WebActivatorEx" OverriddenPackages="WebActivatorEx|99.0.0" />
+    </ItemGroup>
+  </Target>
+</Project>

@@ -1,0 +1,7 @@
+bin/
+obj/
+bin_dotnet/
+artifacts/
+packages/
+*.user
+.vs/
