@@ -4,7 +4,10 @@ Libraries that aren't Microsoft's, built for applications on [webForCore](https:
 
 webForCore runs ASP.NET 4.x applications on .NET 11 with Microsoft's own libraries, and ships **only Microsoft
 assemblies**. Applications also use third-party libraries that need changes to run on .NET or under webForCore's
-PseudoAppDomain; those live here, built against webForCore's released packages, with their own releases.
+PseudoAppDomain. This repository builds those against webForCore's released packages to help the
+[smoke test](https://github.com/jabba2324/webForCore-smoke-test) migrate real applications that use them. It isn't
+part of webForCore, and webForCore doesn't depend on it: webForCore's own documentation gives the workaround for each
+(for WebActivatorEx, calling the start methods from `Application_Start`).
 
 | Package | Assembly | What it is | Why it is needed |
 | --- | --- | --- | --- |
