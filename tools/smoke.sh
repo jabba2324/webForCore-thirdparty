@@ -20,6 +20,7 @@ cat > nuget.config <<CONFIG
   <packageSourceMapping>
     <packageSource key="thirdparty">
       <package pattern="webForCore.WebActivatorEx" />
+      <package pattern="webForCore.WebActivator" />
       <package pattern="webForCore.AjaxControlToolkit*" />
     </packageSource>
     <packageSource key="webforcore">
@@ -38,6 +39,9 @@ fail=0
 if grep -q -E '"lib/net4[0-9]*/WebActivatorEx\.dll"' bin_dotnet/Smoke.deps.json; then
   echo "deps.json: the original WebActivatorEx replaced webForCore.WebActivatorEx"; fail=1
 fi
+if grep -q -E '"lib/net4[0-9]*/WebActivator\.dll"' bin_dotnet/Smoke.deps.json; then
+  echo "deps.json: the original WebActivator replaced webForCore.WebActivator"; fail=1
+fi
 dotnet bin_dotnet/Smoke.dll --urls http://127.0.0.1:5197 > server.log 2>&1 &
 server=$!
 for i in $(seq 120); do curl -s -o /dev/null http://127.0.0.1:5197/Plain && break; sleep 1; done
@@ -46,6 +50,8 @@ for i in $(seq 120); do curl -s -o /dev/null http://127.0.0.1:5197/Plain && brea
 home=$(curl -s http://127.0.0.1:5197/)
 echo "$home" | grep -q "hello from Unity, rendered by Razor" || { echo "/: unexpected response"; echo "$home" | head -20; fail=1; }
 echo "$home" | grep -q "post-start: True" || { echo "/: PostApplicationStartMethod didn't run"; fail=1; }
+# WebActivator 1.x's pre-start and post-start methods ran (the original package's never do, as for WebActivatorEx).
+curl -s http://127.0.0.1:5197/Plain | grep -q "WebActivator 1.x: pre-start True, post-start True" || { echo "/Plain: WebActivator 1.x start methods didn't run"; curl -s http://127.0.0.1:5197/Plain | grep -i 'WebActivator\|<title>' | head -3; fail=1; }
 # An AjaxControlToolkit extender renders its client behaviour.
 calendar=$(curl -s http://127.0.0.1:5197/Calendar.aspx)
 echo "$calendar" | grep -q "Sys.Extended.UI.CalendarBehavior" || { echo "/Calendar.aspx: unexpected response"; echo "$calendar" | head -30; fail=1; }

@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <!-- WebActivator 1.x for webForCore (the package before WebActivatorEx, still brought by MVC 3-era packages such as
+         Ninject.MVC3 2.x), written from its documented API, which finds the activation attributes in the application's
+         load context: the original's Assembly.LoadFrom loads second copies into .NET's default context, and no start
+         method runs (as webForCore issue #21 for WebActivatorEx; Subtext). It keeps the original's name and version; the
+         original isn't strong-named. -->
+    <PropertyGroup>
+        <TargetFramework>net11.0</TargetFramework>
+        <ImplicitUsings>disable</ImplicitUsings>
+        <Nullable>disable</Nullable>
+        <AssemblyName>WebActivator</AssemblyName>
+        <RootNamespace>WebActivator</RootNamespace>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+
+        <PackageId>webForCore.WebActivator</PackageId>
+        <Title>WebActivator for webForCore</Title>
+        <Authors>webForCore contributors</Authors>
+        <Description>WebActivator 1.x for webForCore: pre-start, post-start and shutdown methods for ASP.NET applications, written from WebActivator's documented API, finding them in the application's load context. Replaces the original WebActivator package in builds that reference it.</Description>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageTags>webforms;aspnet;system.web;webactivator;porting;net11</PackageTags>
+        <IncludeSymbols>true</IncludeSymbols>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="webForCore.Configuration" Version="$(WebForCoreVersion)" />
+        <PackageReference Include="webForCore.Web" Version="$(WebForCoreVersion)" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+        <None Include="buildTransitive\webForCore.WebActivator.targets" Pack="true" PackagePath="buildTransitive\" />
+    </ItemGroup>
+
+</Project>
