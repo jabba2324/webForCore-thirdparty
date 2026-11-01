@@ -31,6 +31,7 @@
     <PackageReference Include="webForCore" Version="$(WebForCoreVersion)" />
     <PackageReference Include="webForCore.Web.Mvc" Version="$(WebForCoreVersion)" />
     <PackageReference Include="webForCore.WebActivatorEx" Version="$(ThirdPartyVersion)" />
+    <PackageReference Include="webForCore.WebActivator" Version="$(ThirdPartyVersion)" />
     <PackageReference Include="webForCore.AjaxControlToolkit" Version="$(ThirdPartyVersion)" />
   </ItemGroup>
 
@@ -38,5 +39,6 @@
     <!-- As the applications have them, with no ExcludeAssets. -->
     <PackageReference Include="Unity.Mvc" Version="5.11.1" />
     <PackageReference Include="WebActivatorEx" Version="2.2.0" />
+    <PackageReference Include="WebActivator" Version="1.5.0" />
   </ItemGroup>
 </Project>
