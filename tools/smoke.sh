@@ -4,10 +4,12 @@
 # Usage: tools/smoke.sh <this repository's package version> <webForCore version>
 set -euo pipefail
 root=$(cd "$(dirname "$0")/.." && pwd); version=$1; webforcore=$2
+# The package folders as dotnet sees them: on Windows (Git Bash) /d/a/... is D:/a/..., not C:\d\a\...
+sources=$(cygpath -m "$root" 2>/dev/null || echo "$root")
 base=$(mktemp -d); work=$base/site; mkdir "$work"
 # The host's worker stops a moment after the host: on Windows its folder can't be removed until it has.
 cleanup() {
-  kill $server 2>/dev/null || true
+  kill ${server:-} 2>/dev/null || true
   for i in $(seq 30); do rm -rf "$base" 2>/dev/null && return 0; sleep 1; done
   rm -rf "$base"
 }
@@ -19,8 +21,8 @@ cat > nuget.config <<CONFIG
 <configuration>
   <packageSources>
     <clear />
-    <add key="thirdparty" value="$root/artifacts/packages" />
-    <add key="webforcore" value="$root/packages/webforcore" />
+    <add key="thirdparty" value="$sources/artifacts/packages" />
+    <add key="webforcore" value="$sources/packages/webforcore" />
     <add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
   </packageSources>
   <packageSourceMapping>
