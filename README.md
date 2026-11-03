@@ -1,17 +1,17 @@
 # webForCore-thirdparty
 
-Libraries that aren't Microsoft's, built for applications on [webForCore](https://github.com/jabba2324/webForCore).
+Libraries that aren't Microsoft's, built for applications on [webForCore](https://github.com/xforcore/webForCore).
 
 webForCore runs ASP.NET 4.x applications on .NET 10 LTS with Microsoft's own libraries, and ships **only Microsoft
 assemblies**. Applications also use third-party libraries that need changes to run on .NET or under webForCore.
 This repository builds those against webForCore's released packages to help the
-[smoke test](https://github.com/jabba2324/webForCore-smoke-test) migrate real applications that use them. It isn't
+[smoke test](https://github.com/xforcore/webForCore-smoke-test) migrate real applications that use them. It isn't
 part of webForCore, and webForCore doesn't depend on it: webForCore's own documentation gives the workaround for each
 (for WebActivatorEx, calling the start methods from `Application_Start`).
 
 | Package | Assembly | What it is | Why it is needed |
 | --- | --- | --- | --- |
-| `webForCore.WebActivatorEx` | WebActivatorEx 2.0.0.0 | WebActivatorEx's pre-start, post-start and shutdown attributes and `ActivationManager`, written from its documented API (MIT) | The original package finds the attributes with `Assembly.LoadFrom`, which on .NET loads second copies of the application's assemblies into the default load context, so no start method runs (Unity.Mvc, Ninject.MVC, StructureMap.MVC; [webForCore#21](https://github.com/jabba2324/webForCore/issues/21)). This one looks in the application's context. `webactivator:assembliesToScan` isn't read: the assemblies that reference WebActivatorEx are scanned. |
+| `webForCore.WebActivatorEx` | WebActivatorEx 2.0.0.0 | WebActivatorEx's pre-start, post-start and shutdown attributes and `ActivationManager`, written from its documented API (MIT) | The original package finds the attributes with `Assembly.LoadFrom`, which on .NET loads second copies of the application's assemblies into the default load context, so no start method runs (Unity.Mvc, Ninject.MVC, StructureMap.MVC; [webForCore#21](https://github.com/xforcore/webForCore/issues/21)). This one looks in the application's context. `webactivator:assembliesToScan` isn't read: the assemblies that reference WebActivatorEx are scanned. |
 | `webForCore.WebActivator` | WebActivator 1.5.0.0 | WebActivator 1.x (the package before WebActivatorEx), written from its documented API (MIT) | The same problem as WebActivatorEx: the original finds the attributes with `Assembly.LoadFrom`, so no start method runs. MVC 3-era packages bring it (Ninject.MVC3 2.x; Subtext). The original isn't strong-named, and neither is this one. |
 | `webForCore.AjaxControlToolkit` (+ `.StaticResources`, `.HtmlEditor.Sanitizer`) | AjaxControlToolkit 20.1.0.0 | The [AJAX Control Toolkit](https://github.com/DevExpress/AjaxControlToolkit) 20.1 (BSD 3-Clause), built for .NET 10 against webForCore | The original package is built for .NET Framework. Designers are .NET Framework only. |
 
@@ -22,14 +22,14 @@ resolution at any version of the original.
 ## Using the packages
 
 They aren't on nuget.org. Since 0.5.0 there is a feed on GitHub Pages,
-https://jabba2324.github.io/webForCore-thirdparty/index.json, rebuilt after each release from the latest five
-releases (they are still attached to the [GitHub releases](https://github.com/jabba2324/webForCore-thirdparty/releases)).
+https://xforcore.github.io/webForCore-thirdparty/index.json, rebuilt after each release from the latest five
+releases (they are still attached to the [GitHub releases](https://github.com/xforcore/webForCore-thirdparty/releases)).
 Add it to your `nuget.config` next to webForCore's and drawingForCore's feeds (see webForCore's `docs/MIGRATING.md`):
 
 ```xml
-<add key="webForCore" value="https://jabba2324.github.io/webForCore/index.json" />
-<add key="drawingForCore" value="https://jabba2324.github.io/drawingForCore/index.json" />
-<add key="webForCore-thirdparty" value="https://jabba2324.github.io/webForCore-thirdparty/index.json" />
+<add key="webForCore" value="https://xforcore.github.io/webForCore/index.json" />
+<add key="drawingForCore" value="https://xforcore.github.io/drawingForCore/index.json" />
+<add key="webForCore-thirdparty" value="https://xforcore.github.io/webForCore-thirdparty/index.json" />
 ```
 
 and reference them next to `webForCore`:

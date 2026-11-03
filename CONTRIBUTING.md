@@ -1,8 +1,8 @@
 # Contributing to webForCore-thirdparty
 
-webForCore-thirdparty builds third-party libraries that applications on [webForCore](https://github.com/jabba2324/webForCore)
+webForCore-thirdparty builds third-party libraries that applications on [webForCore](https://github.com/xforcore/webForCore)
 use, where the original doesn't work on .NET or under webForCore. It holds itself to webForCore's rules
-([webForCore's CONTRIBUTING.md](https://github.com/jabba2324/webForCore/blob/webforcore-lift/CONTRIBUTING.md)), adapted
+([webForCore's CONTRIBUTING.md](https://github.com/xforcore/webForCore/blob/webforcore-lift/CONTRIBUTING.md)), adapted
 to a repository of other people's libraries. A change is welcome when it lets a real application run as it did on
 .NET Framework 4.8 and IIS, and when it can prove it with a test.
 
@@ -19,7 +19,7 @@ to a repository of other people's libraries. A change is welcome when it lets a 
    pull request that it failed there.
 
 3. **Every change names a real application it affects.** Say which application hit the problem, what it did there and
-   what its user saw. The [webForCore smoke test](https://github.com/jabba2324/webForCore-smoke-test) migrates
+   what its user saw. The [webForCore smoke test](https://github.com/xforcore/webForCore-smoke-test) migrates
    open-source applications and is the usual source.
 
 4. **Avoid changing the original library's code.** AjaxControlToolkit is DevExpress's code, through WebFormsForCore's
@@ -72,7 +72,7 @@ No code here broke these rules when they were added (3 Nov 2026).
 1. Set `<Version>` (and `<WebForCoreVersion>`, `<DrawingForCoreVersion>` when they move) in `Directory.Build.props`,
    and write `docs/release-notes/<version>.md`.
 2. Tag the merged commit `v<version>`. CI builds and tests the tag on both platforms, creates the GitHub release with
-   the packages, and rebuilds the NuGet feed (https://jabba2324.github.io/webForCore-thirdparty/index.json).
+   the packages, and rebuilds the NuGet feed (https://xforcore.github.io/webForCore-thirdparty/index.json).
 
 Licences: this repository's own code is MIT; the libraries keep their licences (LICENSE, NOTICE). Contributions are
 accepted under the licence of the file they change.
