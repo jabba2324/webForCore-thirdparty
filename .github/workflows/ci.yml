@@ -1,5 +1,5 @@
 # Builds the libraries against webForCore's released packages, packs them, and runs tools/smoke (an application on
-# both repositories' packages). A version tag (v0.4.0, matching <Version> in Directory.Build.props) also publishes the
+# both repositories' packages), on Linux and on Windows; a release needs both. A version tag (v0.4.0, matching <Version> in Directory.Build.props) also publishes the
 # packages as a GitHub release and rebuilds the NuGet feed on GitHub Pages (feed.yml).
 name: CI
 
@@ -81,8 +81,43 @@ jobs:
             artifacts/packages/*.snupkg
           if-no-files-found: error
 
-  release:
+  # The same on Windows (Git Bash), as webForCore's and drawingForCore's CI do: applications are developed there too.
+  build-windows:
     needs: build-and-test
+    runs-on: windows-2025
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      # Check files out as they are stored, as on Linux: core.autocrlf would give the shell scripts CRLF line endings.
+      - name: Line endings
+        run: git config --global core.autocrlf false
+
+      - uses: actions/checkout@v4
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.1xx
+
+      - name: webForCore's packages
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: tools/fetch-webforcore.sh ${{ needs.build-and-test.outputs.webforcore }}
+
+      - name: Build
+        run: dotnet build webForCore-thirdparty.slnx -c Release -nodeReuse:false -p:Version=${{ needs.build-and-test.outputs.version }}
+
+      - name: Pack
+        run: tools/pack.sh ${{ needs.build-and-test.outputs.version }}
+
+      - name: Smoke test
+        run: tools/smoke.sh ${{ needs.build-and-test.outputs.version }} ${{ needs.build-and-test.outputs.webforcore }}
+
+  release:
+    needs: [build-and-test, build-windows]
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-24.04
     permissions:
