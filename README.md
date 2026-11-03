@@ -21,13 +21,18 @@ resolution at any version of the original.
 
 ## Using the packages
 
-They aren't on nuget.org. Download them from a [release](https://github.com/jabba2324/webForCore-thirdparty/releases)
-into the folder that holds webForCore's packages, which your `nuget.config` already lists as a package source (see
-webForCore's `docs/MIGRATING.md`), and reference them next to `webForCore`:
+They aren't on nuget.org. Since 0.5.0 there is a feed on GitHub Pages,
+https://jabba2324.github.io/webForCore-thirdparty/index.json, rebuilt after each release from the latest five
+releases (they are still attached to the [GitHub releases](https://github.com/jabba2324/webForCore-thirdparty/releases)).
+Add it to your `nuget.config` next to webForCore's and drawingForCore's feeds (see webForCore's `docs/MIGRATING.md`):
 
-```bash
-gh release download --repo jabba2324/webForCore-thirdparty --pattern '*.nupkg' --dir packages
+```xml
+<add key="webForCore" value="https://jabba2324.github.io/webForCore/index.json" />
+<add key="drawingForCore" value="https://jabba2324.github.io/drawingForCore/index.json" />
+<add key="webForCore-thirdparty" value="https://jabba2324.github.io/webForCore-thirdparty/index.json" />
 ```
+
+and reference them next to `webForCore`:
 
 ```xml
 <PackageReference Include="webForCore" Version="0.7.0" />
@@ -50,7 +55,8 @@ tools/smoke.sh 0.5.0 0.7.0                      # tools/smoke on both repositori
 `tools/smoke` is an MVC 5 and Web Forms application with Unity.Mvc and the original WebActivatorEx package, as
 applications have them: Unity must be started by a WebActivatorEx start method, the post-start method must run, the
 output must not contain the original WebActivatorEx, and an AjaxControlToolkit extender must render. CI
-(`.github/workflows/ci.yml`) runs it on every push and pull request; a `v<Version>` tag publishes a GitHub release.
+(`.github/workflows/ci.yml`) runs it on every push and pull request; a `v<Version>` tag publishes a GitHub release and
+rebuilds the feed (`.github/workflows/feed.yml`).
 
 ## Identities
 
