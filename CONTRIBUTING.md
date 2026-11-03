@@ -2,7 +2,7 @@
 
 webForCore-thirdparty builds third-party libraries that applications on [webForCore](https://github.com/xforcore/webForCore)
 use, where the original doesn't work on .NET or under webForCore. It holds itself to webForCore's rules
-([webForCore's CONTRIBUTING.md](https://github.com/xforcore/webForCore/blob/webforcore-lift/CONTRIBUTING.md)), adapted
+([webForCore's CONTRIBUTING.md](https://github.com/xforcore/webForCore/blob/main/CONTRIBUTING.md)), adapted
 to a repository of other people's libraries. A change is welcome when it lets a real application run as it did on
 .NET Framework 4.8 and IIS, and when it can prove it with a test.
 
