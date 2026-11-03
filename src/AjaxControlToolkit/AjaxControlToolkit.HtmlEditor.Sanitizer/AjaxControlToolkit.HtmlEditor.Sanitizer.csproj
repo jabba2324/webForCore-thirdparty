@@ -7,7 +7,7 @@
         <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
         <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
         <SignAssembly>true</SignAssembly>
-        <AssemblyOriginatorKeyFile>..\AjaxKey.snk</AssemblyOriginatorKeyFile>
+        <AssemblyOriginatorKeyFile>../../../external/WebFormsForCore.AjaxControlToolkit/AjaxKey.snk</AssemblyOriginatorKeyFile>
 
         <PackageId>webForCore.AjaxControlToolkit.HtmlEditor.Sanitizer</PackageId>
         <Title>AjaxControlToolkit</Title>
@@ -27,7 +27,7 @@
         <PackageReference Include="webForCore.Configuration" Version="$(WebForCoreVersion)" />
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="..\SharedAssemblyInfo.cs" Link="Properties\SharedAssemblyInfo.cs" />
+        <Compile Include="../../../external/WebFormsForCore.AjaxControlToolkit/SharedAssemblyInfo.cs" Link="Properties\SharedAssemblyInfo.cs" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\AjaxControlToolkit\AjaxControlToolkit.csproj" />
@@ -51,4 +51,14 @@
         </ItemGroup>
     </Target>
 
+
+  <!-- The toolkit's code, from the external/WebFormsForCore.AjaxControlToolkit submodule (xforcore/webForCore#61). -->
+  <ItemGroup>
+    <Compile Include="../../../external/WebFormsForCore.AjaxControlToolkit/AjaxControlToolkit.HtmlEditor.Sanitizer/DefaultHtmlSanitizer.cs" Link="DefaultHtmlSanitizer.cs" />
+    <Compile Include="../../../external/WebFormsForCore.AjaxControlToolkit/AjaxControlToolkit.HtmlEditor.Sanitizer/HtmlAttributeWrapper.cs" Link="HtmlAttributeWrapper.cs" />
+    <Compile Include="../../../external/WebFormsForCore.AjaxControlToolkit/AjaxControlToolkit.HtmlEditor.Sanitizer/HtmlNodeWrapper.cs" Link="HtmlNodeWrapper.cs" />
+    <Compile Include="../../../external/WebFormsForCore.AjaxControlToolkit/AjaxControlToolkit.HtmlEditor.Sanitizer/IHtmlAttribute.cs" Link="IHtmlAttribute.cs" />
+    <Compile Include="../../../external/WebFormsForCore.AjaxControlToolkit/AjaxControlToolkit.HtmlEditor.Sanitizer/IHtmlNode.cs" Link="IHtmlNode.cs" />
+    <Compile Include="../../../external/WebFormsForCore.AjaxControlToolkit/AjaxControlToolkit.HtmlEditor.Sanitizer/Properties/AssemblyInfo.cs" Link="Properties/AssemblyInfo.cs" />
+  </ItemGroup>
 </Project>

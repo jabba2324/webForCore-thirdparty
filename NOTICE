@@ -14,13 +14,15 @@ WebActivatorEx (src/WebActivatorEx)
   delay signed with that public key and is not signed by WebActivatorEx's author. WebActivatorEx is David Ebbo's
   project (https://github.com/davidebbo/WebActivator, Apache License 2.0).
 
-AjaxControlToolkit (src/AjaxControlToolkit: AjaxControlToolkit, AjaxControlToolkit.StaticResources,
-AjaxControlToolkit.HtmlEditor.Sanitizer)
+AjaxControlToolkit (external/WebFormsForCore.AjaxControlToolkit, built by the projects in src/AjaxControlToolkit:
+AjaxControlToolkit, AjaxControlToolkit.StaticResources, AjaxControlToolkit.HtmlEditor.Sanitizer)
   The AJAX Control Toolkit 20.1 (https://github.com/DevExpress/AjaxControlToolkit, through
   https://github.com/simonegli8/WebFormsForCore.AjaxControlToolkit commit 0c5b111, with WebFormsForCore's and
-  webForCore's changes for .NET). Moved from xforcore/webForCore (src/WebFormsForCore.AjaxControlToolkit); only the
+  webForCore's changes for .NET). The source is a submodule of
+  https://github.com/xforcore/WebFormsForCore.AjaxControlToolkit, branch webforcore-thirdparty: that commit, cleared
+  down to the three projects' files; any change to the toolkit's code is a commit on that branch. Moved from xforcore/webForCore (src/WebFormsForCore.AjaxControlToolkit); only the
   three shipped projects were moved. BSD 3-Clause License, Copyright (c) 2012-2020, CodePlex Foundation (see
-  LICENSE-BSD-3-CLAUSE.txt and src/AjaxControlToolkit/LICENSE.txt). Signed with the toolkit's published key
+  LICENSE-BSD-3-CLAUSE.txt and the submodule's LICENSE.txt). Signed with the toolkit's published key
   (AjaxKey.snk). The packages depend on HtmlAgilityPack (MIT), Antlr3.Runtime (BSD) and Newtonsoft.Json (MIT) from
   nuget.org.
 

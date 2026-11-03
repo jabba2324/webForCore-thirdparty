@@ -1,0 +1,5 @@
+[submodule "external/WebFormsForCore.AjaxControlToolkit"]
+	path = external/WebFormsForCore.AjaxControlToolkit
+	url = https://github.com/xforcore/WebFormsForCore.AjaxControlToolkit.git
+	branch = webforcore-thirdparty
+	shallow = true

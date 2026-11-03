@@ -45,6 +45,9 @@ dependencies. From 0.5.0 they target .NET 10 (`net10.0`) and need webForCore 0.7
 
 ## Building
 
+AjaxControlToolkit's source is a submodule (`external/WebFormsForCore.AjaxControlToolkit`), so clone with
+`git clone --recurse-submodules`. The projects in `src/AjaxControlToolkit` compile it.
+
 ```bash
 tools/fetch-webforcore.sh                       # webForCore's and drawingForCore's packages into packages/webforcore
 dotnet build webForCore-thirdparty.slnx -c Release
@@ -62,7 +65,7 @@ publishes a GitHub release and rebuilds the feed (`.github/workflows/feed.yml`).
 ## Identities
 
 The assemblies keep their original names and versions so applications and packages built against the originals bind
-to them. AjaxControlToolkit is signed with its own published key (`src/AjaxControlToolkit/AjaxKey.snk`).
+to them. AjaxControlToolkit is signed with its own published key (`AjaxKey.snk` in the submodule).
 WebActivatorEx carries the original's public key (token `7b26dc2a43f6a0d4`) and is delay signed with it
 (`WebActivatorEx.public.snk`, the public key only): it is **not** signed by WebActivatorEx's author. .NET doesn't
 verify strong-name signatures.

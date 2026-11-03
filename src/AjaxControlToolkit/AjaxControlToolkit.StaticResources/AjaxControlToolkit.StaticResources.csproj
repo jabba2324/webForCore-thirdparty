@@ -8,7 +8,7 @@
         <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
         <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
         <SignAssembly>true</SignAssembly>
-        <AssemblyOriginatorKeyFile>..\AjaxKey.snk</AssemblyOriginatorKeyFile>
+        <AssemblyOriginatorKeyFile>../../../external/WebFormsForCore.AjaxControlToolkit/AjaxKey.snk</AssemblyOriginatorKeyFile>
 
         <PackageId>webForCore.AjaxControlToolkit.StaticResources</PackageId>
         <Title>AjaxControlToolkit.StaticResources</Title>
@@ -31,7 +31,7 @@
         <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="..\SharedAssemblyInfo.cs" Link="Properties\SharedAssemblyInfo.cs" />
+        <Compile Include="../../../external/WebFormsForCore.AjaxControlToolkit/SharedAssemblyInfo.cs" Link="Properties\SharedAssemblyInfo.cs" />
     </ItemGroup>
     <ItemGroup>
         <Reference Include="System.Web" />
@@ -47,4 +47,10 @@
         </None>
     </ItemGroup>
 
+
+  <!-- The toolkit's code, from the external/WebFormsForCore.AjaxControlToolkit submodule (xforcore/webForCore#61). -->
+  <ItemGroup>
+    <Compile Include="../../../external/WebFormsForCore.AjaxControlToolkit/AjaxControlToolkit.StaticResources/PreApplicationStartCode.cs" Link="PreApplicationStartCode.cs" />
+    <Compile Include="../../../external/WebFormsForCore.AjaxControlToolkit/AjaxControlToolkit.StaticResources/Properties/AssemblyInfo.cs" Link="Properties/AssemblyInfo.cs" />
+  </ItemGroup>
 </Project>
