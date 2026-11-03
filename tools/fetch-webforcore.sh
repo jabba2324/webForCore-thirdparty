@@ -8,6 +8,6 @@ cd "$(dirname "$0")/.."
 version=${1:-$(sed -n 's#.*<WebForCoreVersion[^>]*>\(.*\)</WebForCoreVersion>.*#\1#p' Directory.Build.props)}
 drawing=${2:-$(sed -n 's#.*<DrawingForCoreVersion[^>]*>\(.*\)</DrawingForCoreVersion>.*#\1#p' Directory.Build.props)}
 mkdir -p packages/webforcore
-gh release download "v$version" --repo jabba2324/webForCore --pattern '*.nupkg' --dir packages/webforcore --clobber
-gh release download "v$drawing" --repo jabba2324/drawingForCore --pattern '*.nupkg' --dir packages/webforcore --clobber
+gh release download "v$version" --repo xforcore/webForCore --pattern '*.nupkg' --dir packages/webforcore --clobber
+gh release download "v$drawing" --repo xforcore/drawingForCore --pattern '*.nupkg' --dir packages/webforcore --clobber
 echo "webForCore $version: $(ls packages/webforcore/*."$version".nupkg | wc -l) packages, drawingForCore $drawing: $(ls packages/webforcore/drawingForCore*."$drawing".nupkg | wc -l), in packages/webforcore"
