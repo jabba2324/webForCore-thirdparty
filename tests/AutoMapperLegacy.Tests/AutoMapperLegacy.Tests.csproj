@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <!-- webForCore.AutoMapperLegacy's tests (issue #9): Facade/ is written as code written for AutoMapper 3.x was, and
+         AutoMapper3/ is AutoMapper 3.3.1's own unit tests (MIT), ported as a conformance suite. The only changes an
+         application needs are the global usings in GlobalUsings.cs.
+         AutoMapperVersion picks the AutoMapper the tests run with; the facade is always built against 12.0.1, so
+         -p:AutoMapperVersion=14.0.0 checks that it runs on a later AutoMapper of the range. -->
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>disable</ImplicitUsings>
+        <Nullable>disable</Nullable>
+        <IsPackable>false</IsPackable>
+        <IsTestProject>true</IsTestProject>
+        <!-- A ported test file has a Main of its own. -->
+        <GenerateProgramFile>false</GenerateProgramFile>
+        <AutoMapperVersion Condition="'$(AutoMapperVersion)' == ''">12.0.1</AutoMapperVersion>
+        <!-- The ported tests are AutoMapper 3.3.1's, as written: obsolete members, unused variables and the like. -->
+        <NoWarn>$(NoWarn);CS0618;CS0168;CS0169;CS0219;CS0414;CS0649;CS0659;CS0661;CS0108;CS0114;CS1998;CS8981;xUnit1013;xUnit2000;xUnit2003;xUnit2004;xUnit2013;xUnit2017;xUnit1004;NU1903</NoWarn>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="AutoMapper" Version="$(AutoMapperVersion)" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+        <PackageReference Include="xunit" Version="2.9.3" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="3.1.4" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\AutoMapperLegacy\AutoMapperLegacy.csproj" />
+    </ItemGroup>
+
+</Project>

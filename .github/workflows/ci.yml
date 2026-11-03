@@ -69,11 +69,20 @@ jobs:
       - name: Build
         run: dotnet build webForCore-thirdparty.slnx -c Release -nodeReuse:false -p:Version=${{ steps.version.outputs.version }}
 
+      # webForCore.AutoMapperLegacy's tests, with AutoMapper 3.3.1's own, on the AutoMapper it's built against (12.0.1).
+      - name: Unit tests
+        run: dotnet test tests/AutoMapperLegacy.Tests -c Release --no-build -nodeReuse:false
+
       - name: Pack
         run: tools/pack.sh ${{ steps.version.outputs.version }}
 
       - name: Smoke test
         run: tools/smoke.sh ${{ steps.version.outputs.version }} ${{ steps.version.outputs.webforcore }}
+
+      # The same tests on the last AutoMapper of the package's range, as applications may resolve it (after Pack: this
+      # rebuilds the test project and the facade).
+      - name: Unit tests on AutoMapper 14
+        run: dotnet test tests/AutoMapperLegacy.Tests -c Release -nodeReuse:false -p:AutoMapperVersion=14.0.0
 
       - name: Upload packages
         uses: actions/upload-artifact@v4
@@ -118,11 +127,17 @@ jobs:
       - name: Build
         run: dotnet build webForCore-thirdparty.slnx -c Release -nodeReuse:false -p:Version=${{ needs.build-and-test.outputs.version }}
 
+      - name: Unit tests
+        run: dotnet test tests/AutoMapperLegacy.Tests -c Release --no-build -nodeReuse:false
+
       - name: Pack
         run: tools/pack.sh ${{ needs.build-and-test.outputs.version }}
 
       - name: Smoke test
         run: tools/smoke.sh ${{ needs.build-and-test.outputs.version }} ${{ needs.build-and-test.outputs.webforcore }}
+
+      - name: Unit tests on AutoMapper 14
+        run: dotnet test tests/AutoMapperLegacy.Tests -c Release -nodeReuse:false -p:AutoMapperVersion=14.0.0
 
   release:
     needs: [build-and-test, build-windows]
