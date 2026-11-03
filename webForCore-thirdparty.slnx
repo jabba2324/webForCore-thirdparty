@@ -4,4 +4,5 @@
   <Project Path="src/AjaxControlToolkit/AjaxControlToolkit/AjaxControlToolkit.csproj" />
   <Project Path="src/AjaxControlToolkit/AjaxControlToolkit.StaticResources/AjaxControlToolkit.StaticResources.csproj" />
   <Project Path="src/AjaxControlToolkit/AjaxControlToolkit.HtmlEditor.Sanitizer/AjaxControlToolkit.HtmlEditor.Sanitizer.csproj" />
+  <Project Path="src/AutoMapperLegacy/AutoMapperLegacy.csproj" />
 </Solution>

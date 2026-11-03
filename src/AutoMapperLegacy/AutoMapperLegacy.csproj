@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <!-- AutoMapper 3.x and 4.x's static API (Mapper.CreateMap, Mapper.Map, ValueResolver<,>, TypeConverter<,>, Profile's
+         Configure, ResolveUsing, Project().To<T>()) on top of AutoMapper 12-14, so that applications written against it
+         recompile unchanged on .NET (issue #9). AutoMapper before 12 doesn't run on .NET: configuring a map throws while
+         it scans System.Linq.Enumerable's methods (webForCore smoke test F22; SocialGoal, Umbraco 7).
+         It's a compatibility package, not a replacement: it has its own name and assembly, and depends on AutoMapper.
+         The range stops before 15, the first release under the RPL 1.5 or a commercial licence; 12.0.1 to 14 are MIT.
+         It's built against the lowest version of the range. -->
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>disable</ImplicitUsings>
+        <Nullable>disable</Nullable>
+        <AssemblyName>webForCore.AutoMapperLegacy</AssemblyName>
+        <RootNamespace>AutoMapperLegacy</RootNamespace>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <!-- The members that forward AutoMapper 12's own interfaces are documented there. -->
+        <NoWarn>$(NoWarn);CS1591</NoWarn>
+
+        <PackageId>webForCore.AutoMapperLegacy</PackageId>
+        <Title>AutoMapper 3.x/4.x static API on AutoMapper 12-14</Title>
+        <Authors>webForCore contributors</Authors>
+        <Description>A source-compatible facade for AutoMapper 3.x and 4.x's static API (Mapper.CreateMap, Mapper.Map, Profile.Configure, ValueResolver, TypeConverter, ResolveUsing, Project().To) on top of AutoMapper 12-14 (MIT), for applications moving from .NET Framework to .NET. Not affiliated with AutoMapper.</Description>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageTags>automapper;porting;aspnet;net10;webforcore</PackageTags>
+        <IncludeSymbols>true</IncludeSymbols>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <!-- 12.0.1 up to, not including, 15: the MIT releases. Built against the lowest. -->
+        <PackageReference Include="AutoMapper" Version="[12.0.1, 15)" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="README.md" Pack="true" PackagePath="\" />
+        <None Include="..\..\NOTICE" Pack="true" PackagePath="\" />
+    </ItemGroup>
+
+</Project>
