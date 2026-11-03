@@ -31,7 +31,10 @@ jobs:
       webforcore: ${{ steps.version.outputs.webforcore }}
 
     steps:
+      # AjaxControlToolkit's source is a submodule (external/, xforcore/webForCore#61).
       - uses: actions/checkout@v4
+        with:
+          submodules: true
 
       # The release version from Directory.Build.props; any other run builds a prerelease of it (0.4.0-ci.12).
       - name: Version
@@ -95,7 +98,12 @@ jobs:
       - name: Line endings
         run: git config --global core.autocrlf false
 
+      - name: Long paths
+        run: git config --global core.longpaths true
+
       - uses: actions/checkout@v4
+        with:
+          submodules: true
 
       - name: Set up .NET
         uses: actions/setup-dotnet@v4

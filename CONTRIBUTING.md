@@ -24,8 +24,10 @@ to a repository of other people's libraries. A change is welcome when it lets a 
 
 4. **Avoid changing the original library's code.** AjaxControlToolkit is DevExpress's code, through WebFormsForCore's
    port; its value is that it is the library applications were written against. Keep a change as small as it can be
-   (an `#if`, a guarded branch), mark it with a `// webForCore:` comment saying why and the issue number, and say in
-   NOTICE what was changed. WebActivatorEx and WebActivator are written from their documented API: match the
+   (an `#if`, a guarded branch), mark it with a `// webForCore:` comment saying why and the issue number, and make it
+   a commit on the `webforcore-thirdparty` branch of
+   [xforcore/WebFormsForCore.AjaxControlToolkit](https://github.com/xforcore/WebFormsForCore.AjaxControlToolkit), which
+   `external/WebFormsForCore.AjaxControlToolkit` pins; then move the submodule to it in a pull request here, with the test. WebActivatorEx and WebActivator are written from their documented API: match the
    original's documented behaviour, and say in a comment where they differ and why.
 
 5. **Keep the identities.** The assemblies keep the originals' names, versions and public keys, so applications and
