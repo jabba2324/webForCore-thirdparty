@@ -34,7 +34,7 @@ to a repository of other people's libraries. A change is welcome when it lets a 
 
 ## How this repository's own code is written
 
-These are webForCore's rules for its own code (its CONTRIBUTING.md, 6–8), for the code written here: WebActivatorEx,
+These are webForCore's rules for its own code (its CONTRIBUTING.md, 6–9), for the code written here: WebActivatorEx,
 WebActivator, the changes to AjaxControlToolkit, the scripts and `tools/smoke`. They don't ask for changes to the
 original library's code beyond principle 4.
 
@@ -49,6 +49,12 @@ original library's code beyond principle 4.
 
 8. **Slow, secure and stable beats fast.** Don't optimise before an application shows a problem with a measurement.
    Choose the simplest design that is clearly correct over a faster one that is harder to reason about.
+
+9. **Programs and tools are .NET.** Everything this repository builds, and every tool it uses, is written in C# as a
+   project or as a file-based app run with `dotnet run tool.cs`. No Python, Node.js, Ruby, Perl or other
+   general-purpose language. Shell scripts (bash, PowerShell) and CI YAML are fine as glue that calls dotnet, git, gh
+   and curl. Anything that parses data or makes decisions belongs in C#. AjaxControlToolkit's client-side JavaScript
+   and CSS are part of the library, not tooling, so this rule doesn't cover them.
 
 No code here broke these rules when they were added (3 Nov 2026).
 
