@@ -53,8 +53,8 @@ original library's code beyond principle 4.
 9. **Programs and tools are .NET.** Everything this repository builds, and every tool it uses, is written in C# as a
    project or as a file-based app run with `dotnet run tool.cs`. No Python, Node.js, Ruby, Perl or other
    general-purpose language. Shell scripts (bash, PowerShell) and CI YAML are fine as glue that calls dotnet, git, gh
-   and curl. Anything that parses data or makes decisions belongs in C#. AjaxControlToolkit's client-side JavaScript
-   and CSS are part of the library, not tooling, so this rule doesn't cover them.
+   and curl. Anything that parses data or makes decisions belongs in C#. Front-end code is fine: JavaScript, TypeScript, CSS, HTML and anything else that runs in the browser
+   (such as AjaxControlToolkit's client scripts and styles) is part of the product, not tooling.
 
 No code here broke these rules when they were added (3 Nov 2026).
 
