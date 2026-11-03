@@ -55,8 +55,9 @@ tools/smoke.sh 0.5.0 0.7.0                      # tools/smoke on both repositori
 `tools/smoke` is an MVC 5 and Web Forms application with Unity.Mvc and the original WebActivatorEx package, as
 applications have them: Unity must be started by a WebActivatorEx start method, the post-start method must run, the
 output must not contain the original WebActivatorEx, and an AjaxControlToolkit extender must render. CI
-(`.github/workflows/ci.yml`) runs it on every push and pull request; a `v<Version>` tag publishes a GitHub release and
-rebuilds the feed (`.github/workflows/feed.yml`).
+(`.github/workflows/ci.yml`) runs it on every push and pull request, on Linux and on Windows; a `v<Version>` tag
+publishes a GitHub release and rebuilds the feed (`.github/workflows/feed.yml`). How changes are made:
+[CONTRIBUTING.md](CONTRIBUTING.md), which holds this repository to webForCore's rules.
 
 ## Identities
 
