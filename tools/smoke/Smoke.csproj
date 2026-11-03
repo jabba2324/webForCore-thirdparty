@@ -2,7 +2,8 @@
 
   <!-- An MVC 5 and Web Forms application on webForCore's packages and this repository's (tools/smoke.sh): Unity.Mvc
        with the original WebActivatorEx package, as applications have them, which webForCore.WebActivatorEx replaces
-       (its start methods must run), and a page with an AjaxControlToolkit extender. -->
+       (its start methods must run), and a page with an AjaxControlToolkit extender. AutoMapper 3.x's static API
+       (webForCore.AutoMapperLegacy) maps in a controller action, with the maps Application_Start created. -->
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <OutputType>Exe</OutputType>
@@ -33,6 +34,7 @@
     <PackageReference Include="webForCore.WebActivatorEx" Version="$(ThirdPartyVersion)" />
     <PackageReference Include="webForCore.WebActivator" Version="$(ThirdPartyVersion)" />
     <PackageReference Include="webForCore.AjaxControlToolkit" Version="$(ThirdPartyVersion)" />
+    <PackageReference Include="webForCore.AutoMapperLegacy" Version="$(ThirdPartyVersion)" />
   </ItemGroup>
 
   <ItemGroup>

@@ -30,6 +30,7 @@ cat > nuget.config <<CONFIG
       <package pattern="webForCore.WebActivatorEx" />
       <package pattern="webForCore.WebActivator" />
       <package pattern="webForCore.AjaxControlToolkit*" />
+      <package pattern="webForCore.AutoMapperLegacy" />
     </packageSource>
     <packageSource key="webforcore">
       <package pattern="webForCore" />
@@ -64,6 +65,10 @@ echo "$home" | grep -q "hello from Unity, rendered by Razor" || { echo "/: unexp
 echo "$home" | grep -q "post-start: True" || { echo "/: PostApplicationStartMethod didn't run"; fail=1; }
 # WebActivator 1.x's pre-start and post-start methods ran (the original package's never do, as for WebActivatorEx).
 curl -s http://127.0.0.1:5197/Plain | grep -q "WebActivator 1.x: pre-start True, post-start True" || { echo "/Plain: WebActivator 1.x start methods didn't run"; curl -s http://127.0.0.1:5197/Plain | grep -i 'WebActivator\|<title>' | head -3; fail=1; }
+# AutoMapper 3.x's static API maps (webForCore.AutoMapperLegacy, on AutoMapper 12): CreateMap in Application_Start, a
+# ValueResolver, ResolveUsing over the context with the Map call's items, and ConvertUsing with a statement lambda.
+mapped=$(curl -s http://127.0.0.1:5197/Plain/Mapped)
+echo "$mapped" | grep -q "AutoMapperLegacy: Dune by Herbert; Dune (2 tags); shelf B2; tags classic,sf" || { echo "/Plain/Mapped: unexpected response"; echo "$mapped" | head -20; fail=1; }
 # An AjaxControlToolkit extender renders its client behaviour.
 calendar=$(curl -s http://127.0.0.1:5197/Calendar.aspx)
 echo "$calendar" | grep -q "Sys.Extended.UI.CalendarBehavior" || { echo "/Calendar.aspx: unexpected response"; echo "$calendar" | head -30; fail=1; }
