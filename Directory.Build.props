@@ -1,10 +1,12 @@
 <Project>
   <!-- webForCore-thirdparty: libraries that aren't Microsoft's, for applications on webForCore. They are built against
        webForCore's released packages (WebForCoreVersion), which tools/fetch-webforcore.sh downloads into
-       packages/webforcore; nuget.config maps webForCore.* to that folder and everything else to nuget.org. -->
+       packages/webforcore with drawingForCore's (DrawingForCoreVersion: System.Drawing, which webForCore depends on
+       from 0.7.0); nuget.config maps webForCore.* and drawingForCore* to that folder and everything else to nuget.org. -->
   <PropertyGroup>
-    <Version>0.4.1</Version>
-    <WebForCoreVersion Condition="'$(WebForCoreVersion)' == ''">0.3.0</WebForCoreVersion>
+    <Version>0.5.0</Version>
+    <WebForCoreVersion Condition="'$(WebForCoreVersion)' == ''">0.7.0</WebForCoreVersion>
+    <DrawingForCoreVersion Condition="'$(DrawingForCoreVersion)' == ''">0.2.0</DrawingForCoreVersion>
     <LangVersion>latest</LangVersion>
     <PackageProjectUrl>https://github.com/jabba2324/webForCore-thirdparty</PackageProjectUrl>
     <RepositoryUrl>https://github.com/jabba2324/webForCore-thirdparty</RepositoryUrl>
