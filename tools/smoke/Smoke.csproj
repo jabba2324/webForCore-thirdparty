@@ -4,7 +4,7 @@
        with the original WebActivatorEx package, as applications have them, which webForCore.WebActivatorEx replaces
        (its start methods must run), and a page with an AjaxControlToolkit extender. -->
   <PropertyGroup>
-    <TargetFramework>net11.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <OutputType>Exe</OutputType>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>disable</Nullable>

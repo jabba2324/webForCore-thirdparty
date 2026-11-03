@@ -5,7 +5,13 @@
 set -euo pipefail
 root=$(cd "$(dirname "$0")/.." && pwd); version=$1; webforcore=$2
 base=$(mktemp -d); work=$base/site; mkdir "$work"
-trap 'kill $server 2>/dev/null || true; rm -rf "$base"' EXIT
+# The host's worker stops a moment after the host: on Windows its folder can't be removed until it has.
+cleanup() {
+  kill $server 2>/dev/null || true
+  for i in $(seq 30); do rm -rf "$base" 2>/dev/null && return 0; sleep 1; done
+  rm -rf "$base"
+}
+trap cleanup EXIT
 cp -r "$root/tools/smoke/." "$work"
 cd "$work"
 cat > nuget.config <<CONFIG
@@ -26,6 +32,8 @@ cat > nuget.config <<CONFIG
     <packageSource key="webforcore">
       <package pattern="webForCore" />
       <package pattern="webForCore.*" />
+      <package pattern="drawingForCore" />
+      <package pattern="drawingForCore.*" />
     </packageSource>
     <packageSource key="nuget.org">
       <package pattern="*" />
@@ -42,9 +50,11 @@ fi
 if grep -q -E '"lib/net4[0-9]*/WebActivator\.dll"' bin_dotnet/Smoke.deps.json; then
   echo "deps.json: the original WebActivator replaced webForCore.WebActivator"; fail=1
 fi
-dotnet bin_dotnet/Smoke.dll --urls http://127.0.0.1:5197 > server.log 2>&1 &
+# Under webforcore-host, which the webForCore package puts in the output (from webForCore 0.7.0), as an application runs.
+dotnet bin_dotnet/webforcore-host/webforcore-host.dll --urls http://127.0.0.1:5197 > server.log 2>&1 &
 server=$!
-for i in $(seq 120); do curl -s -o /dev/null http://127.0.0.1:5197/Plain && break; sleep 1; done
+# -f: the host answers 503 until its worker serves.
+for i in $(seq 120); do curl -sf -o /dev/null http://127.0.0.1:5197/Plain && break; sleep 1; done
 # Unity, registered by a WebActivatorEx PreApplicationStartMethod, constructs the controller; a PostApplicationStartMethod
 # ran (webForCore issue #21: with the original package no start method runs).
 home=$(curl -s http://127.0.0.1:5197/)

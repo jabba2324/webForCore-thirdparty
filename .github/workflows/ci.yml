@@ -53,7 +53,7 @@ jobs:
       - name: Set up .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 11.0.100-rc.3.26522.148
+          dotnet-version: 10.0.1xx
 
       - name: System packages
         run: sudo apt-get update && sudo apt-get install -y --no-install-recommends fontconfig fonts-dejavu-core libfontconfig1
