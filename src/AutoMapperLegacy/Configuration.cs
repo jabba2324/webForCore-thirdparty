@@ -69,10 +69,20 @@ namespace AutoMapperLegacy
 
         public Func<Type, object> ServiceCtor { get; private set; }
 
-        public MapperConfiguration Build()
+        /// <summary>
+        /// Builds AutoMapper 12's configuration from what's registered. <paramref name="assignedTypes"/> are the types
+        /// the facade gave a map to themselves that returns the value, as 3.x assigned it (<see cref="AssignedTypes"/>,
+        /// issue #11).
+        /// </summary>
+        public MapperConfiguration Build(out IReadOnlyCollection<Type> assignedTypes)
         {
             lock (Mapper.Sync)
             {
+                var maps = MapTypes();
+                foreach (var profile in _profiles)
+                    maps.AddRange(profile.MapTypes());
+                var assigned = AssignedTypes.Find(maps);
+                assignedTypes = assigned;
                 return new MapperConfiguration(cfg =>
                 {
                     foreach (var action in _globalActions)
@@ -82,6 +92,8 @@ namespace AutoMapperLegacy
                         cfg.AddProfile(new ReplayProfile(profile));
                     foreach (var profile in _nativeProfiles)
                         cfg.AddProfile(profile);
+                    foreach (var type in assigned)
+                        AssignedTypes.AddMap(cfg, type);
                 });
             }
         }

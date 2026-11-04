@@ -119,6 +119,22 @@ namespace AutoMapperLegacy
                 return _maps.ContainsKey((sourceType, destinationType, true)) || _maps.ContainsKey((sourceType, destinationType, false));
         }
 
+        /// <summary>The source and destination types of the profile's maps, with those <c>ReverseMap</c> adds.</summary>
+        internal List<(Type Source, Type Destination)> MapTypes()
+        {
+            lock (Mapper.Sync)
+            {
+                var types = new List<(Type, Type)>();
+                foreach (var ((source, destination, _), map) in _maps)
+                {
+                    types.Add((source, destination));
+                    if (((IRecordedMap)map).HasReverseMap)
+                        types.Add((destination, source));
+                }
+                return types;
+            }
+        }
+
         /// <summary>Whether a null source member gives a null destination member (default true).</summary>
         public bool AllowNullDestinationValues
         {

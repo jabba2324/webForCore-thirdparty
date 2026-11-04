@@ -34,6 +34,7 @@ namespace AutoMapperLegacy
         private static RootConfiguration _root = new();
         private static MapperConfiguration _configuration;
         private static IMapper _mapper;
+        private static HashSet<Type> _assignedTypes = new();
 
         /// <summary>Discards the built configuration; the next use builds it again from what's registered.</summary>
         internal static void Invalidate()
@@ -42,7 +43,18 @@ namespace AutoMapperLegacy
             {
                 _configuration = null;
                 _mapper = null;
+                _assignedTypes = new HashSet<Type>();
             }
+        }
+
+        /// <summary>
+        /// Whether the map is one the facade added (a type to itself, returning the value, as 3.x assigned it: issue #11),
+        /// which 3.x didn't have, so <see cref="FindTypeMapFor(Type, Type)"/> and <see cref="GetAllTypeMaps"/> leave it out.
+        /// </summary>
+        private static bool IsAssignedTypeMap(TypeMap typeMap)
+        {
+            lock (Sync)
+                return typeMap.SourceType == typeMap.DestinationType && _assignedTypes.Contains(typeMap.DestinationType);
         }
 
         private static IMapper Current
@@ -53,9 +65,10 @@ namespace AutoMapperLegacy
                 {
                     if (_mapper == null)
                     {
-                        var configuration = _root.Build();
+                        var configuration = _root.Build(out var assignedTypes);
                         _mapper = configuration.CreateMapper();
                         _configuration = configuration;
+                        _assignedTypes = new HashSet<Type>(assignedTypes);
                     }
                     return _mapper;
                 }
@@ -154,11 +167,15 @@ namespace AutoMapperLegacy
 
         public static void AddGlobalIgnore(string startingwith) => Configuration.AddGlobalIgnore(startingwith);
 
-        public static TypeMap FindTypeMapFor(Type sourceType, Type destinationType) => ConfigurationProvider.Internal().FindTypeMapFor(sourceType, destinationType);
+        public static TypeMap FindTypeMapFor(Type sourceType, Type destinationType)
+        {
+            var typeMap = ConfigurationProvider.Internal().FindTypeMapFor(sourceType, destinationType);
+            return typeMap != null && IsAssignedTypeMap(typeMap) ? null : typeMap;
+        }
 
         public static TypeMap FindTypeMapFor<TSource, TDestination>() => FindTypeMapFor(typeof(TSource), typeof(TDestination));
 
-        public static TypeMap[] GetAllTypeMaps() => ConfigurationProvider.Internal().GetAllTypeMaps().ToArray();
+        public static TypeMap[] GetAllTypeMaps() => ConfigurationProvider.Internal().GetAllTypeMaps().Where(typeMap => !IsAssignedTypeMap(typeMap)).ToArray();
 
         /// <summary>AutoMapper 12's validation, which is stricter than 3.x's in places (see the README).</summary>
         public static void AssertConfigurationIsValid() => ConfigurationProvider.AssertConfigurationIsValid();
@@ -314,14 +331,16 @@ namespace AutoMapperLegacy
             lock (Sync)
             {
                 var configuration = ConfigurationProvider.Internal();
+                var assignedTypes = _assignedTypes;
                 var pending = new Stack<(Type Source, Type Destination)>();
                 var seen = new HashSet<(Type, Type)>();
                 pending.Push((sourceType, destinationType));
                 while (pending.Count > 0)
                 {
                     var (source, destination) = pending.Pop();
+                    // A map the facade added for a type to itself (issue #11) isn't one: 3.x's dynamic map copied the members.
                     if (!seen.Add((source, destination)) || _root.HasMap(source, destination) ||
-                        configuration.FindTypeMapFor(source, destination) != null)
+                        (configuration.FindTypeMapFor(source, destination) != null && !(source == destination && assignedTypes.Contains(source))))
                         continue;
                     _root.CreateMap(source, destination);
                     foreach (var pair in MemberTypePairs(source, destination))
