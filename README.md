@@ -14,8 +14,10 @@ part of webForCore, and webForCore doesn't depend on it: webForCore's own docume
 | `webForCore.WebActivatorEx` | WebActivatorEx 2.0.0.0 | WebActivatorEx's pre-start, post-start and shutdown attributes and `ActivationManager`, written from its documented API (MIT) | The original package finds the attributes with `Assembly.LoadFrom`, which on .NET loads second copies of the application's assemblies into the default load context, so no start method runs (Unity.Mvc, Ninject.MVC, StructureMap.MVC; [webForCore#21](https://github.com/xforcore/webForCore/issues/21)). This one looks in the application's context. `webactivator:assembliesToScan` isn't read: the assemblies that reference WebActivatorEx are scanned. |
 | `webForCore.WebActivator` | WebActivator 1.5.0.0 | WebActivator 1.x (the package before WebActivatorEx), written from its documented API (MIT) | The same problem as WebActivatorEx: the original finds the attributes with `Assembly.LoadFrom`, so no start method runs. MVC 3-era packages bring it (Ninject.MVC3 2.x; Subtext). The original isn't strong-named, and neither is this one. |
 | `webForCore.AjaxControlToolkit` (+ `.StaticResources`, `.HtmlEditor.Sanitizer`) | AjaxControlToolkit 20.1.0.0 | The [AJAX Control Toolkit](https://github.com/DevExpress/AjaxControlToolkit) 20.1 (BSD 3-Clause), built for .NET 10 against webForCore | The original package is built for .NET Framework. Designers are .NET Framework only. |
+| `webForCore.AutoMapperLegacy` | webForCore.AutoMapperLegacy (its own; namespace `AutoMapperLegacy`) | AutoMapper 3.x and 4.x's static API (`Mapper.CreateMap`, `Mapper.Map`, `Profile.Configure`, `ValueResolver`, `TypeConverter`, `ResolveUsing`, `Project().To<T>()`) on AutoMapper 12-14 (MIT; 15+ is RPL or commercial), so that code written for it recompiles unchanged with `global using Mapper = AutoMapperLegacy.Mapper;` ([its README](src/AutoMapperLegacy/README.md)). AutoMapper 12-14 carry GHSA-rvv3-g6hj-g44x, as 3.x did. | AutoMapper before 12 doesn't run on .NET: configuring a map throws while it scans `System.Linq.Enumerable` (SocialGoal, Umbraco 7; webForCore smoke test F22). Moving from the static API to AutoMapper 12 means rewriting every mapping class. A compatibility package, not a replacement: it depends on AutoMapper and keeps its own name. |
 
-Each package replaces the original package of the same assembly when both are in a build (for example
+The replacement packages (all but `webForCore.AutoMapperLegacy`, a compatibility package) replace the original package of
+the same assembly when both are in a build (for example
 WebActivatorEx, which Unity.Mvc brings): its `buildTransitive` targets make it win the SDK's package conflict
 resolution at any version of the original.
 
@@ -51,21 +53,24 @@ AjaxControlToolkit's source is a submodule (`external/WebFormsForCore.AjaxContro
 ```bash
 tools/fetch-webforcore.sh                       # webForCore's and drawingForCore's packages into packages/webforcore
 dotnet build webForCore-thirdparty.slnx -c Release
+dotnet test tests/AutoMapperLegacy.Tests -c Release --no-build   # (and -p:AutoMapperVersion=14.0.0, see the project)
 tools/pack.sh                                   # artifacts/packages
-tools/smoke.sh 0.5.0 0.7.0                      # tools/smoke on both repositories' packages, under webforcore-host
+tools/smoke.sh 0.6.0 0.7.0                      # tools/smoke on both repositories' packages, under webforcore-host
 ```
 
 `tools/smoke` is an MVC 5 and Web Forms application with Unity.Mvc and the original WebActivatorEx package, as
 applications have them: Unity must be started by a WebActivatorEx start method, the post-start method must run, the
-output must not contain the original WebActivatorEx, and an AjaxControlToolkit extender must render. CI
-(`.github/workflows/ci.yml`) runs it on every push and pull request, on Linux and on Windows; a `v<Version>` tag
+output must not contain the original WebActivatorEx, an AjaxControlToolkit extender must render, and AutoMapper 3.x's
+static API must map (webForCore.AutoMapperLegacy). `tests/AutoMapperLegacy.Tests` has webForCore.AutoMapperLegacy's
+unit tests and AutoMapper 3.3.1's own, ported. CI (`.github/workflows/ci.yml`) runs the tests and the smoke test on
+every push and pull request, on Linux and on Windows; a `v<Version>` tag
 publishes a GitHub release and rebuilds the feed (`.github/workflows/feed.yml`). How changes are made:
 [CONTRIBUTING.md](CONTRIBUTING.md), which holds this repository to webForCore's rules.
 
 ## Identities
 
-The assemblies keep their original names and versions so applications and packages built against the originals bind
-to them. AjaxControlToolkit is signed with its own published key (`AjaxKey.snk` in the submodule).
+The replacement packages' assemblies keep their original names and versions so applications and packages built against
+the originals bind to them (webForCore.AutoMapperLegacy, a compatibility package, has its own). AjaxControlToolkit is signed with its own published key (`AjaxKey.snk` in the submodule).
 WebActivatorEx carries the original's public key (token `7b26dc2a43f6a0d4`) and is delay signed with it
 (`WebActivatorEx.public.snk`, the public key only): it is **not** signed by WebActivatorEx's author. .NET doesn't
 verify strong-name signatures.

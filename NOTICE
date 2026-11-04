@@ -26,4 +26,31 @@ AjaxControlToolkit, AjaxControlToolkit.StaticResources, AjaxControlToolkit.HtmlE
   (AjaxKey.snk). The packages depend on HtmlAgilityPack (MIT), Antlr3.Runtime (BSD) and Newtonsoft.Json (MIT) from
   nuget.org.
 
+AutoMapperLegacy (src/AutoMapperLegacy, tests/AutoMapperLegacy.Tests)
+  A source-compatible facade for AutoMapper 3.x and 4.x's static API on AutoMapper 12-14. MIT License, Copyright (c)
+  webForCore contributors. Its API follows AutoMapper 3.3.1's and 4.2.1's, and ValueResolver<,>, TypeConverter<,>,
+  IValueResolver, ResolutionResult and IgnoreMapAttribute are adapted from AutoMapper 3.3.1.
+  tests/AutoMapperLegacy.Tests/AutoMapper3 is AutoMapper 3.3.1's unit tests (src/UnitTests), ported; each file says
+  where it came from. AutoMapper (https://github.com/LuckyPennySoftware/AutoMapper, tags v3.3.1 and v4.2.1) is under
+  the MIT License:
+
+    Copyright (c) 2010 Jimmy Bogard
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+    documentation files (the "Software"), to deal in the Software without restriction, including without limitation
+    the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
+    permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all copies or substantial portions of
+    the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+    THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+    TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+  The package depends on AutoMapper 12.0.1 to 14 from nuget.org (MIT License, Copyright (c) 2010 Jimmy Bogard).
+  AutoMapper 15 and later are under the RPL 1.5 or a commercial licence; nothing here comes from them.
+
 webForCore's packages, which these are built against, are under their own licences; see webForCore's NOTICE.

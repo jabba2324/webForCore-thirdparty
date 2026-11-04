@@ -1,0 +1,61 @@
+// Ported from AutoMapper 3.3.1's unit tests, src/UnitTests/Bug/EnumMatchingOnValue.cs
+// (https://github.com/LuckyPennySoftware/AutoMapper/tree/v3.3.1), Copyright (c) 2010 Jimmy Bogard, MIT License (see
+// NOTICE). Changed for webForCore.AutoMapperLegacy as described in AutoMapper3/Compat/Porting.cs.
+using AutoMapper;
+using Should;
+using Xunit;
+
+namespace AutoMapper3.UnitTests.Bug
+{
+#if !SILVERLIGHT
+    public class EnumMatchingOnValue : AutoMapperSpecBase
+    {
+        private SecondClass _result;
+
+        public class FirstClass
+        {
+            public FirstEnum EnumValue { get; set; }
+        }
+
+        public enum FirstEnum
+        {
+            NamedEnum = 1,
+            SecondNameEnum = 2
+        }
+
+        public class SecondClass
+        {
+            public SecondEnum EnumValue { get; set; }
+        }
+
+        public enum SecondEnum
+        {
+            DifferentNamedEnum = 1,
+            SecondNameEnum = 2
+        }
+        protected override void Establish_context()
+        {
+            Mapper.Initialize(cfg =>
+            {
+                cfg.CreateMap<FirstClass, SecondClass>();
+            });
+        }
+
+        protected override void Because_of()
+        {
+            var source = new FirstClass
+            {
+                EnumValue = FirstEnum.NamedEnum
+            };
+            _result = Mapper.Map<FirstClass, SecondClass>(source);
+        }
+
+        [Fact]
+        public void Should_match_on_the_name_even_if_values_match()
+        {
+            _result.EnumValue.ShouldEqual(SecondEnum.DifferentNamedEnum);
+        }
+    }
+#endif
+
+}

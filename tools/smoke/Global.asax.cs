@@ -10,6 +10,7 @@ namespace SmokeMvc
         {
             RouteTable.Routes.MapRoute("Default", "{controller}/{action}/{id}",
                 new { controller = "Home", action = "Index", id = UrlParameter.Optional });
+            AutoMapperConfig.Register();
         }
     }
 }

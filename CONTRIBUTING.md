@@ -8,10 +8,11 @@ to a repository of other people's libraries. A change is welcome when it lets a 
 
 ## The principles
 
-1. **Only what applications need.** A library is here because a real application uses it and the original package
-   doesn't work on webForCore (for WebActivatorEx: no start method runs, webForCore#21). webForCore doesn't depend on
-   this repository, and its documentation gives a workaround without it; a problem that is webForCore's is fixed in
-   webForCore, not worked around here.
+1. **Only what applications need.** A library is here because real applications need it to migrate: the original
+   doesn't work on .NET or under webForCore (for WebActivatorEx: no start method runs, webForCore#21), or moving off
+   it is a rewrite (AutoMapper 3.x's static API, #9). webForCore doesn't depend on this repository, and its
+   documentation gives a workaround without it; a problem that is webForCore's is fixed in webForCore, not worked
+   around here.
 
 2. **Every change comes with a test.** `tools/smoke` is an application with the original packages, as applications
    have them, that checks the behaviour each package exists for (start methods run, an AjaxControlToolkit extender
@@ -30,15 +31,17 @@ to a repository of other people's libraries. A change is welcome when it lets a 
    `external/WebFormsForCore.AjaxControlToolkit` pins; then move the submodule to it in a pull request here, with the test. WebActivatorEx and WebActivator are written from their documented API: match the
    original's documented behaviour, and say in a comment where they differ and why.
 
-5. **Keep the identities.** The assemblies keep the originals' names, versions and public keys, so applications and
-   packages built against the originals bind to them (README, "Identities"). Each package's `buildTransitive` targets
-   make it win over the original package at any version.
+5. **Keep the identities of replacement packages.** A replacement package's assemblies keep the originals' names,
+   versions and public keys, so applications and packages built against the originals bind to them (README,
+   "Identities"), and its `buildTransitive` targets make it win over the original package at any version. A
+   compatibility package, which gives applications an old API on top of a current library (webForCore.AutoMapperLegacy),
+   has its own name and assembly instead, and depends on the library.
 
 ## How this repository's own code is written
 
 These are webForCore's rules for its own code (its CONTRIBUTING.md, 6–9), for the code written here: WebActivatorEx,
-WebActivator, the changes to AjaxControlToolkit, the scripts and `tools/smoke`. They don't ask for changes to the
-original library's code beyond principle 4.
+WebActivator, AutoMapperLegacy, the changes to AjaxControlToolkit, the scripts and `tools/smoke`. They don't ask for
+changes to the original library's code beyond principle 4.
 
 6. **No reflection into .NET's internals.** Don't read, write or call non-public members of the runtime, ASP.NET Core,
    webForCore or any other library, and don't depend on their private names or layout. Reflection over the

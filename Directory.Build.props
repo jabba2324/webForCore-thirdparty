@@ -4,7 +4,7 @@
        packages/webforcore with drawingForCore's (DrawingForCoreVersion: System.Drawing, which webForCore depends on
        from 0.7.0); nuget.config maps webForCore.* and drawingForCore* to that folder and everything else to nuget.org. -->
   <PropertyGroup>
-    <Version>0.5.0</Version>
+    <Version>0.6.0</Version>
     <WebForCoreVersion Condition="'$(WebForCoreVersion)' == ''">0.7.0</WebForCoreVersion>
     <DrawingForCoreVersion Condition="'$(DrawingForCoreVersion)' == ''">0.2.0</DrawingForCoreVersion>
     <LangVersion>latest</LangVersion>

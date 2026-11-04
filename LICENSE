@@ -1,6 +1,9 @@
 webForCore-thirdparty is distributed under several licences:
 
-  * webForCore's own code (src/WebActivatorEx, the build files and tools) is under the MIT License below.
+  * webForCore's own code (src/WebActivatorEx, src/WebActivator, src/AutoMapperLegacy, the build files and tools) is
+    under the MIT License below.
+  * AutoMapper 3.3.1's unit tests, ported in tests/AutoMapperLegacy.Tests/AutoMapper3, and the parts of
+    src/AutoMapperLegacy adapted from AutoMapper keep AutoMapper's MIT License (Copyright (c) 2010 Jimmy Bogard; NOTICE).
   * AjaxControlToolkit (src/AjaxControlToolkit) keeps its own licence, the BSD 3-Clause License
     (LICENSE-BSD-3-CLAUSE.txt and src/AjaxControlToolkit/LICENSE.txt).
 
