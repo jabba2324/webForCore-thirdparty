@@ -67,8 +67,9 @@ echo "$home" | grep -q "post-start: True" || { echo "/: PostApplicationStartMeth
 curl -s http://127.0.0.1:5197/Plain | grep -q "WebActivator 1.x: pre-start True, post-start True" || { echo "/Plain: WebActivator 1.x start methods didn't run"; curl -s http://127.0.0.1:5197/Plain | grep -i 'WebActivator\|<title>' | head -3; fail=1; }
 # AutoMapper 3.x's static API maps (webForCore.AutoMapperLegacy, on AutoMapper 12): CreateMap in Application_Start, a
 # ValueResolver, ResolveUsing over the context with the Map call's items, and ConvertUsing with a statement lambda.
+# A member given values of its own element type with a map only between base types assigns them (issue #11).
 mapped=$(curl -s http://127.0.0.1:5197/Plain/Mapped)
-echo "$mapped" | grep -q "AutoMapperLegacy: Dune by Herbert; Dune (2 tags); shelf B2; tags classic,sf" || { echo "/Plain/Mapped: unexpected response"; echo "$mapped" | head -20; fail=1; }
+echo "$mapped" | grep -q "AutoMapperLegacy: Dune by Herbert; Dune (2 tags); shelf B2; tags classic,sf; notes sticky:reread" || { echo "/Plain/Mapped: unexpected response"; echo "$mapped" | head -20; fail=1; }
 # An AjaxControlToolkit extender renders its client behaviour.
 calendar=$(curl -s http://127.0.0.1:5197/Calendar.aspx)
 echo "$calendar" | grep -q "Sys.Extended.UI.CalendarBehavior" || { echo "/Calendar.aspx: unexpected response"; echo "$calendar" | head -30; fail=1; }
