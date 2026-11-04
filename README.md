@@ -55,7 +55,7 @@ tools/fetch-webforcore.sh                       # webForCore's and drawingForCor
 dotnet build webForCore-thirdparty.slnx -c Release
 dotnet test tests/AutoMapperLegacy.Tests -c Release --no-build   # (and -p:AutoMapperVersion=14.0.0, see the project)
 tools/pack.sh                                   # artifacts/packages
-tools/smoke.sh 0.5.1 0.7.0                      # tools/smoke on both repositories' packages, under webforcore-host
+tools/smoke.sh 0.6.0 0.7.0                      # tools/smoke on both repositories' packages, under webforcore-host
 ```
 
 `tools/smoke` is an MVC 5 and Web Forms application with Unity.Mvc and the original WebActivatorEx package, as

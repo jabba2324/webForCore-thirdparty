@@ -27,7 +27,7 @@ It isn't AutoMapper, isn't affiliated with it, and doesn't replace its assembly:
 1. Replace the `AutoMapper` 3.x or 4.x package with this one:
 
    ```xml
-   <PackageReference Include="webForCore.AutoMapperLegacy" Version="0.5.1" />
+   <PackageReference Include="webForCore.AutoMapperLegacy" Version="0.6.0" />
    ```
 
 2. Add, once per project:
