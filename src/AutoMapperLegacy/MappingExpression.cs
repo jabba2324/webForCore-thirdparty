@@ -20,10 +20,13 @@ namespace AutoMapperLegacy
     /// take functions, as 3.x's did, so statement lambdas compile: AutoMapper 12's take expression trees (they are
     /// still there through the interface). The lambdas given to <c>ForMember</c> run again at each build.
     /// </remarks>
-    public sealed class LegacyMappingExpression<TSource, TDestination> : IMappingExpression<TSource, TDestination>
+    public sealed class LegacyMappingExpression<TSource, TDestination> : IMappingExpression<TSource, TDestination>, IRecordedMap
     {
         private readonly List<Action<IMappingExpression<TSource, TDestination>>> _actions = new();
         private readonly List<ValueTransformerConfiguration> _valueTransformers = new();
+        private bool _hasReverseMap;
+
+        bool IRecordedMap.HasReverseMap => _hasReverseMap;
 
         internal LegacyMappingExpression()
         {
@@ -189,6 +192,7 @@ namespace AutoMapperLegacy
         public LegacyMappingExpression<TDestination, TSource> ReverseMap()
         {
             var reverse = new LegacyMappingExpression<TDestination, TSource>();
+            _hasReverseMap = true;
             Record(e => reverse.Replay(e.ReverseMap()));
             return reverse;
         }
@@ -290,10 +294,13 @@ namespace AutoMapperLegacy
     /// <see cref="IMappingExpression"/>, which it implements. It records and replays as
     /// <see cref="LegacyMappingExpression{TSource,TDestination}"/> does.
     /// </summary>
-    public sealed class LegacyMappingExpression : IMappingExpression
+    public sealed class LegacyMappingExpression : IMappingExpression, IRecordedMap
     {
         private readonly List<Action<IMappingExpression>> _actions = new();
         private readonly List<ValueTransformerConfiguration> _valueTransformers = new();
+        private bool _hasReverseMap;
+
+        bool IRecordedMap.HasReverseMap => _hasReverseMap;
 
         private readonly Type _sourceType;
         private readonly Type _destinationType;
@@ -353,6 +360,7 @@ namespace AutoMapperLegacy
         public LegacyMappingExpression ReverseMap()
         {
             var reverse = new LegacyMappingExpression(_destinationType, _sourceType);
+            _hasReverseMap = true;
             Record(e => reverse.Replay(e.ReverseMap()));
             return reverse;
         }
@@ -415,5 +423,15 @@ namespace AutoMapperLegacy
         void IMappingExpressionBase<object, object, IMappingExpression>.ConvertUsing(Func<object, object, ResolutionContext, object> mappingFunction) => ConvertUsing(mappingFunction);
         void IMappingExpressionBase<object, object, IMappingExpression>.ConvertUsing(AutoMapper.ITypeConverter<object, object> converter) => Record(e => e.ConvertUsing(converter));
         void IMappingExpressionBase<object, object, IMappingExpression>.ConvertUsing<TTypeConverter>() => Record(e => e.ConvertUsing<TTypeConverter>());
+    }
+}
+
+namespace AutoMapperLegacy
+{
+    /// <summary>What the facade reads from a recorded map when it builds a configuration.</summary>
+    internal interface IRecordedMap
+    {
+        /// <summary>Whether <c>ReverseMap</c> was called, so the map the other way exists too.</summary>
+        bool HasReverseMap { get; }
     }
 }

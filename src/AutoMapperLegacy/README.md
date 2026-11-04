@@ -107,7 +107,8 @@ The mapping itself is AutoMapper 12's. The facade records the configuration and 
 - **Maps are built on first use.** Registrations are recorded at any time; the first `Map` after one builds a
   configuration and mapper from everything registered (and later registrations rebuild it), as 3.x let maps be added
   until they were used. So configuration errors (a `ForMember` on a nested member, a missing included map) appear at
-  the first `Map` or `AssertConfigurationIsValid`, not at `CreateMap` or `Initialize`. The lambdas given to `ForMember`
+  the first `Map` or `AssertConfigurationIsValid`, not at `CreateMap` or `Initialize`, and because the configuration
+  is one, a map AutoMapper 12 can't build makes every `Map` fail, not only that map's. The lambdas given to `ForMember`
   run again at each build. `CreateMap` for types that already have a map in the same profile adds to that map, as in
   3.x. `Mapper.Instance` is the mapper of the moment: keep `Mapper` rather than the instance.
 - **Thread safety:** registrations and builds take one lock; mapping doesn't (AutoMapper 12's mapper is thread-safe).
@@ -126,6 +127,13 @@ The mapping itself is AutoMapper 12's. The facade records the configuration and 
 - **No implicit maps.** AutoMapper 12 maps only between types with a map. `DynamicMap` (and 4.x's
   `CreateMissingTypeMaps`, for `Map`) creates the map between the two types, and between the types of their members of
   the same name and the elements of their collections, when those are the application's classes.
+- **A value that already has the member's type** (or a collection of them) is assigned, element by element into a new
+  collection, as 3.x did when there was no map to that type from it or its bases (#11). AutoMapper 12 to 14 also take
+  a map between base types (for Umbraco 7's `MemberPropertyTypeDisplay` elements, `PropertyTypeBasic ->
+  PropertyTypeDisplay`), whose result isn't the member's type: 12 fails building the configuration, 13 and 14 throw
+  when mapping. The facade adds a map of such a type to itself that returns the value (`ConvertUsing(value => value)`),
+  for the destination types of its maps and the types of their members and elements; `FindTypeMapFor` and
+  `GetAllTypeMaps` leave these maps out, as 3.x had none. Maps of AutoMapper 12 profiles aren't looked at.
 - **`ConvertUsing(Func<ResolutionContext, TDestination>)`** (4.x) is an extension method, so that 3.x's
   `ConvertUsing(x => Convert.ToInt32(x))` still binds to the source overload. Likewise `ConstructUsing` over the context:
   `ConstructUsing(x => new Foo())`, ambiguous in 3.x, takes the source.
