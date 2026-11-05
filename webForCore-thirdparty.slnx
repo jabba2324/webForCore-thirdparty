@@ -6,4 +6,5 @@
   <Project Path="src/AjaxControlToolkit/AjaxControlToolkit.HtmlEditor.Sanitizer/AjaxControlToolkit.HtmlEditor.Sanitizer.csproj" />
   <Project Path="src/AutoMapperLegacy/AutoMapperLegacy.csproj" />
   <Project Path="tests/AutoMapperLegacy.Tests/AutoMapperLegacy.Tests.csproj" />
+  <Project Path="tests/AutoMapperLegacy.LangVersion13.Tests/AutoMapperLegacy.LangVersion13.Tests.csproj" />
 </Solution>
