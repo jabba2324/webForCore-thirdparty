@@ -4,9 +4,9 @@
        packages/webforcore with drawingForCore's (DrawingForCoreVersion: System.Drawing, which webForCore depends on
        from 0.7.0); nuget.config maps webForCore.* and drawingForCore* to that folder and everything else to nuget.org. -->
   <PropertyGroup>
-    <Version>0.6.0</Version>
-    <WebForCoreVersion Condition="'$(WebForCoreVersion)' == ''">0.7.0</WebForCoreVersion>
-    <DrawingForCoreVersion Condition="'$(DrawingForCoreVersion)' == ''">0.2.0</DrawingForCoreVersion>
+    <Version>0.7.0</Version>
+    <WebForCoreVersion Condition="'$(WebForCoreVersion)' == ''">0.9.0</WebForCoreVersion>
+    <DrawingForCoreVersion Condition="'$(DrawingForCoreVersion)' == ''">0.3.0</DrawingForCoreVersion>
     <LangVersion>latest</LangVersion>
     <PackageProjectUrl>https://github.com/xforcore/webForCore-thirdparty</PackageProjectUrl>
     <RepositoryUrl>https://github.com/xforcore/webForCore-thirdparty</RepositoryUrl>
