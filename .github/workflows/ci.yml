@@ -73,6 +73,10 @@ jobs:
       - name: Unit tests
         run: dotnet test tests/AutoMapperLegacy.Tests -c Release --no-build -nodeReuse:false
 
+      # A project on <LangVersion>13</LangVersion> that uses the facade (#14).
+      - name: Unit tests on C# 13
+        run: dotnet test tests/AutoMapperLegacy.LangVersion13.Tests -c Release --no-build -nodeReuse:false
+
       - name: Pack
         run: tools/pack.sh ${{ steps.version.outputs.version }}
 
@@ -83,6 +87,9 @@ jobs:
       # rebuilds the test project and the facade).
       - name: Unit tests on AutoMapper 14
         run: dotnet test tests/AutoMapperLegacy.Tests -c Release -nodeReuse:false -p:AutoMapperVersion=14.0.0
+
+      - name: Unit tests on C# 13 and AutoMapper 14
+        run: dotnet test tests/AutoMapperLegacy.LangVersion13.Tests -c Release -nodeReuse:false -p:AutoMapperVersion=14.0.0
 
       - name: Upload packages
         uses: actions/upload-artifact@v4
@@ -129,6 +136,10 @@ jobs:
 
       - name: Unit tests
         run: dotnet test tests/AutoMapperLegacy.Tests -c Release --no-build -nodeReuse:false
+
+      # A project on <LangVersion>13</LangVersion> that uses the facade (#14).
+      - name: Unit tests on C# 13
+        run: dotnet test tests/AutoMapperLegacy.LangVersion13.Tests -c Release --no-build -nodeReuse:false
 
       - name: Pack
         run: tools/pack.sh ${{ needs.build-and-test.outputs.version }}

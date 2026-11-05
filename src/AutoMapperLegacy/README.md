@@ -41,11 +41,46 @@ It isn't AutoMapper, isn't affiliated with it, and doesn't replace its assembly:
    The files keep their `using AutoMapper;`: AutoMapper 12's `IMappingExpression<,>`, `ResolutionContext`, `TypeMap`
    and the rest are the types the code names, and the facade adds 3.x's members to them.
 
-3. The project needs C# 14, the default for `net10.0` (an old `<LangVersion>` from the .NET Framework project has to
-   go): 3.x's `ResolutionContext.SourceValue`, `Options` and the like are extension properties.
+3. **C# 14, only where 3.x's `ResolutionContext` members are used.** `SourceValue`, `DestinationValue`, `SourceType`,
+   `DestinationType`, `MemberName`, `IsSourceValueNull`, `Options` and `Engine` on the context (and on
+   `ResolutionResult.Context`) are extension properties, and AutoMapper 12's `ResolutionContext` is a sealed class of
+   its own, so nothing else can give it 3.x's members. A project that uses them needs C# 14 (the default for
+   `net10.0`; without it, `CS9260: Feature 'extensions' is not available in C# 13.0`). The rest of the facade (the
+   static `Mapper`, profiles, `ValueResolver<,>`, `TypeConverter<,>`, `ResolveUsing`, `Project().To<T>()`) works on
+   C# 13: a project that uses only that keeps the `<LangVersion>` webForCore's migration guide gives it (13, or 7.3).
+
+   **C# 14 changes `array.Contains` in expression trees** (webForCore#138). With C# 14's first-class span conversions,
+   `ids.Contains(x.Id)` on an array, inside an `Expression<...>`, is `MemoryExtensions.Contains(op_Implicit(ids),
+   x.Id)` (`ReadOnlySpan<T>`), not `Enumerable.Contains(ids, x.Id)`. Delegates are unaffected, but whatever translates
+   expression trees doesn't know the span call: LINQ to Entities (EF 6: ``LINQ to Entities does not recognize the
+   method 'Boolean Contains[Int32](System.ReadOnlySpan`1[System.Int32], Int32)'``), LINQ to SQL, and an application's
+   own expression visitors (Umbraco 7: `ArgumentOutOfRangeException: ... 'No logic supported for op_Implicit'`). In a
+   project on C# 14, either:
+
+   - cast the array to `IEnumerable<T>` at those calls: `((IEnumerable<int>)ids).Contains(x.Id)` is
+     `Enumerable.Contains` in any C# version; or
+   - map the span call back in the application's visitor, at the top of its `VisitMethodCall`:
+
+     ```csharp
+     if (m.Method.DeclaringType == typeof(MemoryExtensions) && m.Method.Name == "Contains" && m.Arguments.Count == 2
+         && m.Arguments[0] is MethodCallExpression { Method.Name: "op_Implicit" } span && span.Arguments[0].Type.IsArray)
+     {
+         var contains = typeof(Enumerable).GetMethods().Single(x => x.Name == "Contains" && x.GetParameters().Length == 2)
+             .MakeGenericMethod(span.Arguments[0].Type.GetElementType());
+         return Visit(Expression.Call(contains, span.Arguments[0], m.Arguments[1]));
+     }
+     ```
+
+   Better still, keep C# 14 to the projects that use the context's members (#14).
 
 Umbraco 7.15's Umbraco.Core and Umbraco.Web (AutoMapper 3.3.1, 83 files that use it) compile with these steps, one
-more alias and the `ITypeConverter<,>` change below in 2 files.
+more alias and the `ITypeConverter<,>` change below in 2 files. Only Umbraco.Web uses the context's members (its
+`ContentPropertyBasicConverter`, `ContentPropertyDisplayConverter`, `ContentPropertyDtoConverter` and
+`MemberModelMapper`), so only it needs C# 14. Umbraco.Core can keep its `<LangVersion>`; on C# 14 its queries through
+`Umbraco.Core.Persistence.Querying.ExpressionVisitorBase` fail: `PermissionRepository.GetPermissionsForEntities`'s
+`localIds.Contains(dto.UserGroupId)` throws "No logic supported for op_Implicit" when content is saved in the back
+office (`ContentPostValidateAttribute`), unless `ExpressionVisitorBase.VisitMethodCall` maps the span call back as
+above (webForCore smoke test F165).
 
 ### What an application may still have to change
 
@@ -93,8 +128,9 @@ more alias and the `ITypeConverter<,>` change below in 2 files.
   application's helper over `IMappingExpression<,>`), the same are extension methods, except `ResolveUsing<T>()`.
 - **Base classes and types:** `ValueResolver<,>` (`ResolveCore`), `IValueResolver`, `ResolutionResult`,
   `TypeConverter<,>` (`ConvertCore`), `ITypeConverter<,>`, `IMappingAction<,>`, `IMappingEngine`, `[IgnoreMap]`.
-- **`ResolutionContext`** (AutoMapper 12's, with 3.x's members as extension properties): `SourceValue`,
-  `DestinationValue`, `SourceType`, `DestinationType`, `MemberName`, `IsSourceValueNull`, `Options.Items`, `Engine`.
+- **`ResolutionContext`** (AutoMapper 12's, with 3.x's members as extension properties, which need C# 14: step 3):
+  `SourceValue`, `DestinationValue`, `SourceType`, `DestinationType`, `MemberName`, `IsSourceValueNull`,
+  `Options.Items`, `Engine`.
 - **Projection:** `Project().To<T>()` (with parameters and members to expand), `Project(engine)`, 4.x's
   `ProjectTo<T>()` without a configuration, `Mapper.Engine.CreateMapExpression<TSource, TDestination>()`, and
   `TypeMap.GetPropertyMaps()`.
